@@ -5,14 +5,19 @@ import axios from 'axios';
 const SignUpScreen = ({ navigation }) => {
   const [busNumber, setBusNumber] = useState('');
   const [password, setPassword] = useState('');
+  const [route, setRoute] = useState(''); // New state for route
 
   const signUp = async () => {
     try {
-      await axios.post('http://192.168.75.51:3000/register', { busNumber, password });
-      Alert.alert('Sign Up successful', 'Login Now');
-      navigation.navigate('Login');
+      const response = await axios.post('http://192.168.38.134:3000/register', { busNumber, password ,route});
+      if (response.status === 200) {
+        Alert.alert('Sign Up successful', 'Login Now');
+        navigation.navigate('Login');
+      } else {
+        Alert.alert('Sign Up failed', 'Error registering user');
+      }
     } catch (error) {
-      Alert.alert('Sign Up failed', 'Error registering user');
+      Alert.alert('Sign Up failed', error.response?.data?.message || 'Error registering user');
     }
   };
 
@@ -29,6 +34,12 @@ const SignUpScreen = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Enter your route"
+        value={route}
+        onChangeText={setRoute}
         style={styles.input}
       />
       <Button title="Sign Up" onPress={signUp} />

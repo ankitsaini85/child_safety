@@ -8,7 +8,7 @@ const LoginScreen = ({ navigation }) => {
 
   const login = async () => {
     try {
-      const response = await axios.post('http://192.168.75.51:3000/login', { busNumber, password });
+      const response = await axios.post('http://192.168.38.134:3000/login', { busNumber, password });
       const { token } = response.data;
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       navigation.navigate('Home', { busNumber });
