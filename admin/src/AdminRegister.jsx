@@ -8,7 +8,7 @@ const AdminRegister = () => {
 
   const register = async () => {
     try {
-      await axios.post('http://192.168.38.134:3000/admin/register', { name, email, password });
+      await axios.post('http://192.168.159.134:3000/admin/register', { name, email, password });
       alert('Admin registered successfully');
     } catch (error) {
       alert('Registration failed');

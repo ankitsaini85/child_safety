@@ -36,6 +36,19 @@ mongoose.connect(`mongodb+srv://${USER_NAME}:${PASSWORD}@merncluster.2k4wx.mongo
     route: { type: String, required: true }
   });
   const User = mongoose.model('User', userSchema);
+
+  // API to get students by route
+app.get('/students/:route', async (req, res) => {
+  const { route } = req.params;
+  try {
+    const students = await Student.find({ route });
+    res.json(students);
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    res.status(500).send('Error fetching students');
+  }
+});
+
   
 // API to register admin
 app.post('/admin/register', async (req, res) => {
@@ -73,6 +86,7 @@ app.post('/admin/login', async (req, res) => {
 
   // API to register student
 app.post('/student/register', async (req, res) => {
+  console.log("hello student");
   const { name, number, studentId, email, class: studentClass, route, photo } = req.body;
   if (!name || !number || !studentId || !email || !studentClass || !route || !photo) {
     return res.status(400).json({ message: 'All fields are required' });
@@ -81,6 +95,7 @@ app.post('/student/register', async (req, res) => {
   try {
     const newStudent = new Student({ name, number, studentId, email, class: studentClass, route, photo });
     await newStudent.save();
+    console.log('Student registered: saved data', newStudent);
     res.status(200).send('Student registered successfully');
   } catch (err) {
     console.error('Error registering student:', err);
