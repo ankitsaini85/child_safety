@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Button, Alert } from 'react-native';
+import { StyleSheet, View, TextInput, Button, Alert, Text, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 
 const SignUpScreen = ({ navigation }) => {
@@ -9,25 +9,25 @@ const SignUpScreen = ({ navigation }) => {
 
   const signUp = async () => {
     try {
-      const response = await axios.post('http://192.168.78.134:3000/register', { busNumber, password ,route});
+      const response = await axios.post('http://192.168.159.51:3000/register', { busNumber, password, route });
       if (response.status === 200) {
         Alert.alert('Sign Up successful', 'Login Now');
         navigation.navigate('Login');
-      } else {
-        Alert.alert('Sign Up failed', 'Error registering user');
       }
     } catch (error) {
-      Alert.alert('Sign Up failed', error.response?.data?.message || 'Error registering user');
+      Alert.alert('Sign Up Failed', 'Please try again');
     }
   };
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Sign Up to Guardian Sync</Text>
       <TextInput
         placeholder="Bus Number"
         value={busNumber}
         onChangeText={setBusNumber}
         style={styles.input}
+        placeholderTextColor="#aaa"
       />
       <TextInput
         placeholder="Password"
@@ -35,14 +35,21 @@ const SignUpScreen = ({ navigation }) => {
         onChangeText={setPassword}
         secureTextEntry
         style={styles.input}
+        placeholderTextColor="#aaa"
       />
       <TextInput
-        placeholder="Enter your route"
+        placeholder="Route"
         value={route}
         onChangeText={setRoute}
         style={styles.input}
+        placeholderTextColor="#aaa"
       />
-      <Button title="Sign Up" onPress={signUp} />
+      <TouchableOpacity style={styles.button} onPress={signUp}>
+        <Text style={styles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.buttonText}>Back to Login</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -51,14 +58,37 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     padding: 16,
+    backgroundColor: '#f5f5f5',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 24,
+    color: '#333',
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    width: '100%',
+    padding: 15,
+    marginVertical: 10,
     borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+  },
+  button: {
+    width: '100%',
+    padding: 15,
+    marginVertical: 10,
+    backgroundColor: '#007BFF',
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

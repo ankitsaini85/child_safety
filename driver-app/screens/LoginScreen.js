@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Button, Alert } from 'react-native';
+import { StyleSheet, View, TextInput, Button, Alert, Text, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 
 const LoginScreen = ({ navigation }) => {
@@ -8,28 +8,30 @@ const LoginScreen = ({ navigation }) => {
 
   const login = async () => {
     try {
-      const response = await axios.post('http://192.168.144.134:3000/login', { busNumber, password });
+      const response = await axios.post('http://192.168.159.51:3000/login', { busNumber, password });
       const { token, route } = response.data;
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       navigation.navigate('Home', { busNumber, driverRoute: route });
     } catch (error) {
-      if (error.response) {
-        Alert.alert('Login failed', error.response.data);
-      } else if (error.request) {
-        Alert.alert('Login failed', 'No response from server');
-      } else {
-        Alert.alert('Login failed', error.message);
-      }
+      Alert.alert('Login Failed', 'Invalid bus number or password');
     }
+  };
+
+  const signUp = () => {
+    // Handle sign up logic here
+    navigation.navigate('SignUp');
+    // Alert.alert('Sign Up', 'Sign up functionality to be implemented');
   };
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Login to Guardian Sync</Text>
       <TextInput
         placeholder="Bus Number"
         value={busNumber}
         onChangeText={setBusNumber}
         style={styles.input}
+        placeholderTextColor="#aaa"
       />
       <TextInput
         placeholder="Password"
@@ -37,9 +39,14 @@ const LoginScreen = ({ navigation }) => {
         onChangeText={setPassword}
         secureTextEntry
         style={styles.input}
+        placeholderTextColor="#aaa"
       />
-      <Button title="Login" onPress={login} />
-      <Button title="Sign Up" onPress={() => navigation.navigate('SignUp')} />
+      <TouchableOpacity style={styles.button} onPress={login}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={signUp}>
+        <Text style={styles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -48,14 +55,37 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     padding: 16,
+    backgroundColor: '#f5f5f5',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 24,
+    color: '#333',
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    width: '100%',
+    padding: 15,
+    marginVertical: 10,
     borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+  },
+  button: {
+    width: '100%',
+    padding: 15,
+    marginVertical: 10,
+    backgroundColor: '#007BFF',
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

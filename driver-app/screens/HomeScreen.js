@@ -4,7 +4,6 @@ import * as Location from 'expo-location';
 import axios from 'axios';
 import StudentsList from './StudentsList';
 
-
 const HomeScreen = ({ route, navigation }) => {
   const { busNumber, driverRoute } = route.params;
   const [location, setLocation] = useState(null);
@@ -71,19 +70,20 @@ const HomeScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome, Driver</Text>
-      <Text style={styles.subtitle}>Bus Number: {busNumber}</Text>
-      <Text style={styles.subtitle}>Route: {driverRoute}</Text>
-      <TouchableOpacity
-        style={[styles.button, tracking && styles.trackingButton]}
-        onPress={handleTracking}
-      >
-        <Text style={[styles.buttonText, tracking && styles.trackingButtonText]}>
-          {tracking ? 'Stop Tracking' : 'Start Tracking'}
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.card}>
+        <Text style={styles.title}>Welcome, Driver</Text>
+        <Text style={styles.subtitle}>Bus Number: {busNumber}</Text>
+        <Text style={styles.subtitle}>Route: {driverRoute}</Text>
+        <TouchableOpacity
+          style={[styles.button, tracking && styles.trackingButton]}
+          onPress={handleTracking}
+        >
+          <Text style={[styles.buttonText, tracking && styles.trackingButtonText]}>
+            {tracking ? 'Stop Tracking' : 'Start Tracking'}
+          </Text>
+        </TouchableOpacity>
+      </View>
       <StudentsList busNumber={busNumber} />
-
     </View>
   );
 };
@@ -94,6 +94,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+    backgroundColor: '#f5f5f5',
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
+    width: '90%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+    alignItems: 'center',
   },
   title: {
     fontSize: 24,
@@ -106,8 +120,14 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#007bff',
-    padding: 10,
-    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   trackingButton: {
     backgroundColor: '#ff0000',
@@ -115,6 +135,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
   },
   trackingButtonText: {
     color: '#fff',

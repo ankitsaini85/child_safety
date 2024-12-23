@@ -105,7 +105,7 @@ const StudentsList = ({ busNumber }) => {
     const fetchStudents = async () => {
       try {
         console.log(`Fetching students for bus number: ${busNumber}`);
-        const response = await axios.get(`http://192.168.144.134:3000/students/${busNumber}`);
+        const response = await axios.get(`http://192.168.159.51:3000/students/${busNumber}`);
         console.log('Fetched students:', response.data);
         setStudents(response.data);
       } catch (error) {
@@ -123,12 +123,32 @@ const StudentsList = ({ busNumber }) => {
       )
     );
     console.log(`Student ID: ${studentId}, Status: ${status}`);
+    const date = new Date();
+
+let day = date.getDate();
+let month = date.getMonth() + 1;
+let year = date.getFullYear();
+
+// This arrangement can be altered based on how we want the date's format to appear.
+let currentDate = `${day}-${month}-${year}`;
+console.log(currentDate); // "17-6-2022"
 
     try {
-      await axios.post('http://192.168.144.134:3000/send-email', {
+      await axios.post('http://192.168.159.51:3000/send-email', {
         email: email,
-        subject: 'Attendance(Bus) Notification',
-        text: `Your child has been marked as ${status}.`
+        subject: `Attendance Update for Your Child`,
+        text: `Dear Parent/Guardian,
+
+We would like to inform you about your child’s attendance status for ${currentDate}.:
+
+Status: ${status}
+
+Attendance plays a crucial role in their academic journey, and we encourage regular updates. If you have any questions or need to share details regarding this, please feel free to reach out.
+
+Thank you for your continued support.
+
+Best regards
+Guradian Sync Team`,
       });
       console.log('Email sent successfully');
     } catch (error) {
@@ -139,23 +159,32 @@ const StudentsList = ({ busNumber }) => {
   return (
     <ScrollView style={styles.container}>
       {students.map(student => (
-        <View key={student._id} style={styles.studentCard}>
+                <View key={student._id} style={styles.studentCard}>
           <Image source={{ uri: student.photo }} style={styles.photo} />
           <Text style={styles.name}>{student.name}</Text>
           <Text style={styles.class}>{student.class}</Text>
           <View style={styles.buttons}>
-            <Button
-              title="Present"
-              onPress={() => handleAttendance(student._id, 'present', student.email)}
-              color={student.attendance === 'present' ? 'green' : 'blue'}
-              // disabled={student.attendance === 'present' || student.attendance === 'absent'}
-            />
-            <Button
-              title="Absent"
-              onPress={() => handleAttendance(student._id, 'absent', student.email)}
-              color={student.attendance === 'absent' ? 'red' : 'blue'}
-              // disabled={student.attendance === 'present' || student.attendance === 'absent'}
-            />
+            <View style={styles.button}>
+              <Button
+                title="Picked"
+                onPress={() => handleAttendance(student._id, 'Picked', student.email)}
+                color={student.attendance === 'Picked' ? 'green' : 'blue'}
+              />
+            </View>
+            <View style={styles.button}>
+              <Button
+                title="Dropped"
+                onPress={() => handleAttendance(student._id, 'Dropped', student.email)}
+                color={student.attendance === 'Dropped' ? 'green' : 'blue'}
+              />
+            </View>
+            <View style={styles.button}>
+              <Button
+                title="Absent"
+                onPress={() => handleAttendance(student._id, 'Absent', student.email)}
+                color={student.attendance === 'Absent' ? 'red' : 'blue'}
+              />
+            </View>
           </View>
         </View>
       ))}
@@ -164,19 +193,16 @@ const StudentsList = ({ busNumber }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
   studentCard: {
-    marginBottom: 16,
-    padding: 16,
+    padding: 25,
+    margin: 20,
     backgroundColor: '#fff',
     borderRadius: 8,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
+    alignItems: 'center', // Center the content horizontally
   },
   photo: {
     width: 100,
@@ -187,15 +213,20 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 5,
   },
   class: {
     fontSize: 16,
-    color: '#666',
+    marginBottom: 10,
   },
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 8,
+    width: '100%', // Ensure buttons take full width
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 5, // Add gap between buttons
   },
 });
 

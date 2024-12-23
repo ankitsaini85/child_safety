@@ -22,7 +22,7 @@ const StudentRegister = () => {
 
   const register = async () => {
     try {
-      await axios.post('http://192.168.144.134:3000/student/register', { name, number, studentId, email, class: studentClass, route, busNumber, photo });
+      await axios.post('http://192.168.159.51:3000/student/register', { name, number, studentId, email, class: studentClass, route, busNumber, photo });
       alert('Student registered successfully');
     } catch (error) {
       alert('Registration failed');
