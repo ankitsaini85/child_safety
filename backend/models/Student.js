@@ -7,6 +7,7 @@ const studentSchema = new mongoose.Schema({
   email: { type: String, required: true },
   class: { type: String, required: true },
   route: { type: String, required: true },
+  busNumber: { type: String, required: true }, // New field for bus number
   photo: { type: String, required: true } // Store photo as base64 string
 });
 

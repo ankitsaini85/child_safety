@@ -9,7 +9,7 @@ const SignUpScreen = ({ navigation }) => {
 
   const signUp = async () => {
     try {
-      const response = await axios.post('http://192.168.159.134:3000/register', { busNumber, password ,route});
+      const response = await axios.post('http://192.168.78.134:3000/register', { busNumber, password ,route});
       if (response.status === 200) {
         Alert.alert('Sign Up successful', 'Login Now');
         navigation.navigate('Login');

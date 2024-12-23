@@ -37,13 +37,30 @@ mongoose.connect(`mongodb+srv://${USER_NAME}:${PASSWORD}@merncluster.2k4wx.mongo
   });
   const User = mongoose.model('User', userSchema);
 
+// API to get students by bus number
+app.get('/students/:busNumber', async (req, res) => {
+  const { busNumber } = req.params;
+  console.log(`Fetching students for bus number: ${busNumber}`);
+  try {
+    const students = await Student.find({ busNumber });
+    console.log('Fetched students:', students);
+    res.json(students);
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    res.status(500).send('Error fetching students');
+  }
+});
+
   // API to get students by route
 app.get('/students/:route', async (req, res) => {
+  console.log("hello");
   const { route } = req.params;
   try {
     const students = await Student.find({ route });
+    console.log('Fetched students:', students);
     res.json(students);
   } catch (error) {
+    console.log("error in finding students");
     console.error('Error fetching students:', error);
     res.status(500).send('Error fetching students');
   }
@@ -85,23 +102,30 @@ app.post('/admin/login', async (req, res) => {
 });
 
   // API to register student
-app.post('/student/register', async (req, res) => {
-  console.log("hello student");
-  const { name, number, studentId, email, class: studentClass, route, photo } = req.body;
-  if (!name || !number || !studentId || !email || !studentClass || !route || !photo) {
-    return res.status(400).json({ message: 'All fields are required' });
-  }
-
-  try {
-    const newStudent = new Student({ name, number, studentId, email, class: studentClass, route, photo });
-    await newStudent.save();
-    console.log('Student registered: saved data', newStudent);
-    res.status(200).send('Student registered successfully');
-  } catch (err) {
-    console.error('Error registering student:', err);
-    res.status(500).send('Error registering student');
-  }
-});
+  app.post('/student/register', async (req, res) => {
+    console.log("hello student");
+    const { name, number, studentId, email, class: studentClass, route, busNumber, photo } = req.body;
+    console.log('Received data:', { name, number, studentId, email, studentClass, route, busNumber, photo });
+  
+    if (!name || !number || !studentId || !email || !studentClass || !route || !busNumber || !photo) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+  
+    try {
+      const newStudent = new Student({ name, number, studentId, email, class: studentClass, route, busNumber, photo });
+      await newStudent.save();
+      console.log('Student registered:', newStudent);
+      res.status(200).send('Student registered successfully');
+    } catch (err) {
+      if (err.code === 11000) {
+        console.error('Duplicate entry error:', err);
+        res.status(400).send('Student with this ID already exists');
+      } else {
+        console.error('Error registering student:', err);
+        res.status(500).send('Error registering student');
+      }
+    }
+  });
 
 
 // API to register user

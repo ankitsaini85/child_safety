@@ -8,6 +8,7 @@ const StudentRegister = () => {
   const [email, setEmail] = useState('');
   const [studentClass, setStudentClass] = useState('');
   const [route, setRoute] = useState('');
+  const [busNumber, setBusNumber] = useState(''); // New state for bus number
   const [photo, setPhoto] = useState('');
 
   const handlePhotoCapture = (event) => {
@@ -21,7 +22,7 @@ const StudentRegister = () => {
 
   const register = async () => {
     try {
-      await axios.post('http://192.168.159.134:3000/student/register', { name, number, studentId, email, class: studentClass, route, photo });
+      await axios.post('http://192.168.159.134:3000/student/register', { name, number, studentId, email, class: studentClass, route, busNumber, photo });
       alert('Student registered successfully');
     } catch (error) {
       alert('Registration failed');
@@ -37,6 +38,7 @@ const StudentRegister = () => {
       <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
       <input type="text" placeholder="Class" value={studentClass} onChange={(e) => setStudentClass(e.target.value)} />
       <input type="text" placeholder="Route" value={route} onChange={(e) => setRoute(e.target.value)} />
+      <input type="text" placeholder="Bus Number" value={busNumber} onChange={(e) => setBusNumber(e.target.value)} /> {/* New input for bus number */}
       <input type="file" accept="image/*" onChange={handlePhotoCapture} />
       <button onClick={register}>Register</button>
     </div>

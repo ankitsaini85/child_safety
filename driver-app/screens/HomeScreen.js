@@ -41,7 +41,7 @@ import StudentsList from './StudentsList';
 
 const HomeScreen = ({ route }) => {
   const [isTracking, setIsTracking] = useState(false);
-  const { busNumber, driverRoute } = route.params;
+  const { busNumber } = route.params;
 
   const handleTracking = () => {
     setIsTracking(!isTracking);
@@ -55,7 +55,7 @@ const HomeScreen = ({ route }) => {
         color={isTracking ? "red" : "blue"}
       />
       <Text style={styles.large}>Tracking Status: {isTracking ? "On" : "Off"}</Text>
-      <StudentsList route={driverRoute} />
+      <StudentsList busNumber={busNumber} />
     </View>
   );
 };
@@ -63,12 +63,12 @@ const HomeScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     padding: 16,
   },
   large: {
     fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 16,
   },
 });
 
