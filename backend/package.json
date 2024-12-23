@@ -1,0 +1,24 @@
+{
+  "name": "admin-portal",
+  "version": "1.0.0",
+  "main": "src/main.jsx",
+  "scripts": {
+    "start": "vite"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.2",
+    "morgan": "^1.10.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0"
+  },
+  "devDependencies": {
+    "vite": "^2.4.4"
+  }
+}
