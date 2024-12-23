@@ -9,7 +9,7 @@ const AdminLogin = ({ onLogin }) => {
 
   const login = async () => {
     try {
-      const response = await axios.post('http://192.168.159.134:3000/admin/login', { email, password });
+      const response = await axios.post('http://192.168.144.134:3000/admin/login', { email, password });
       const { token } = response.data;
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       onLogin();

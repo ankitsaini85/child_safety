@@ -9,7 +9,7 @@
 //     const fetchStudents = async () => {
 //       try {
 //         console.log(`Fetching students for bus number: ${busNumber}`);
-//         const response = await axios.get(`http://192.168.78.134:3000/students/${busNumber}`);
+//         const response = await axios.get(`http://192.168.144.134:3000/students/${busNumber}`);
 //         console.log('Fetched students:', response.data);
 //         setStudents(response.data);
 //       } catch (error) {
@@ -21,7 +21,11 @@
 //   }, [busNumber]);
 
 //   const handleAttendance = (studentId, status) => {
-//     // Handle attendance logic here
+//     setStudents(prevStudents =>
+//       prevStudents.map(student =>
+//         student._id === studentId ? { ...student, attendance: status } : student
+//       )
+//     );
 //     console.log(`Student ID: ${studentId}, Status: ${status}`);
 //   };
 
@@ -33,8 +37,18 @@
 //           <Text style={styles.name}>{student.name}</Text>
 //           <Text style={styles.class}>{student.class}</Text>
 //           <View style={styles.buttons}>
-//             <Button title="Present" onPress={() => handleAttendance(student._id, 'present')} />
-//             <Button title="Absent" onPress={() => handleAttendance(student._id, 'absent')} />
+//             <Button
+//               title="Present"
+//               onPress={() => handleAttendance(student._id, 'present')}
+//               color={student.attendance === 'present' ? 'green' : 'blue'}
+//               // disabled={student.attendance !== undefined}
+//             />
+//             <Button
+//               title="Absent"
+//               onPress={() => handleAttendance(student._id, 'absent')}
+//               color={student.attendance === 'absent' ? 'red' : 'blue'}
+//               // disabled={student.attendance !== undefined}
+//             />
 //           </View>
 //         </View>
 //       ))}
@@ -102,13 +116,24 @@ const StudentsList = ({ busNumber }) => {
     fetchStudents();
   }, [busNumber]);
 
-  const handleAttendance = (studentId, status) => {
+  const handleAttendance = async (studentId, status, email) => {
     setStudents(prevStudents =>
       prevStudents.map(student =>
         student._id === studentId ? { ...student, attendance: status } : student
       )
     );
     console.log(`Student ID: ${studentId}, Status: ${status}`);
+
+    try {
+      await axios.post('http://192.168.144.134:3000/send-email', {
+        email: email,
+        subject: 'Attendance(Bus) Notification',
+        text: `Your child has been marked as ${status}.`
+      });
+      console.log('Email sent successfully');
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
   };
 
   return (
@@ -121,15 +146,15 @@ const StudentsList = ({ busNumber }) => {
           <View style={styles.buttons}>
             <Button
               title="Present"
-              onPress={() => handleAttendance(student._id, 'present')}
+              onPress={() => handleAttendance(student._id, 'present', student.email)}
               color={student.attendance === 'present' ? 'green' : 'blue'}
-              // disabled={student.attendance !== undefined}
+              // disabled={student.attendance === 'present' || student.attendance === 'absent'}
             />
             <Button
               title="Absent"
-              onPress={() => handleAttendance(student._id, 'absent')}
+              onPress={() => handleAttendance(student._id, 'absent', student.email)}
               color={student.attendance === 'absent' ? 'red' : 'blue'}
-              // disabled={student.attendance !== undefined}
+              // disabled={student.attendance === 'present' || student.attendance === 'absent'}
             />
           </View>
         </View>
